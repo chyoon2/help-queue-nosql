@@ -6,14 +6,29 @@ import * as serviceWorker from './serviceWorker';
 import { createStore } from 'redux';
 import rootReducer from './reducers/index';
 import { Provider } from 'react-redux';
+import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
+import { createFirestoreInstance } from 'redux-firestore';
+import firebase from "./firebase";
+
 
 const store = createStore(rootReducer);
 
+const rrfProps = {
+  firebase, 
+  config: {
+    userProfile: "users"
+  },
+  dispatch: store.dispatch,
+  createFirestoreInstance
+}
+// The React Redux Firebase bindings require these props to be passed into the <ReactReduxFirebaseProvider> component. We can add different key-value pairs to config. userProfile: "users" simply states that any data on users will be stored in a collection called "users".
 
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <ReactReduxFirebaseProvider {...rrfProps}>
+      <App />
+    </ReactReduxFirebaseProvider>
   </Provider>,
   document.getElementById('root')
 );
